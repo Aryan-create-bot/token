@@ -1,0 +1,14 @@
+name: Auto Token Update
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Every 4 hours
+  workflow_dispatch:        # Allows manual run
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Your Token Generator API
+        run: |
+          curl -s "https://auto-token-update.vercel.app/generate-tokens?api_key=@TL-ARYAN"

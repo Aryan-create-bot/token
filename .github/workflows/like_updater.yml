@@ -1,0 +1,43 @@
+name: Update Likes Daily at 12PM UTC
+
+on:
+  schedule:
+    - cron: "0 12 * * *"  # Runs every day at 12:00 PM UTC
+  workflow_dispatch:       # Allows manual run via GitHub UI
+
+jobs:
+  update_likes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install requests
+        run: |
+          pip install requests
+
+      - name: Run like updater
+        run: |
+          import requests
+
+          uids = [
+              "900287945",
+              "2749011596"
+          ]
+          region = "bd"
+          api_key = "@TL-ARYAN"
+
+          for uid in uids:
+              url = f"https://like-nine-ruby.vercel.app/like?region={region}&uid={uid}&api_key={api_key}"
+              try:
+                  response = requests.get(url, timeout=10)
+                  print(f"UID {uid} → Status {response.status_code} → Response: {response.text}")
+              except Exception as e:
+                  print(f"Failed for UID {uid}: {str(e)}")
+        shell: python
